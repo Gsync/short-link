@@ -9,6 +9,8 @@ import Login from '../imports/ui/Login';
 import Link from '../imports/ui/Link';
 import NotFound from '../imports/ui/NotFound';
 
+window.browserHistory = browserHistory;
+
 const routes = (
   <Router history={browserHistory}>
     <Route path="/signup" component={Signup} />
