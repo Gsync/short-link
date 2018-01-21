@@ -13,13 +13,23 @@ import NotFound from '../imports/ui/NotFound';
 const unauthenticatedPages = ['/', '/signup'];
 const authenticatedPages = ['/links'];
 
-window.browserHistory = browserHistory;
+const onEnterPublicPage = () => {
+  if (Meteor.userId()) {
+    browserHistory.replace('/links');
+  }
+};
+
+const onEnterPrivatePage = () => {
+  if (!Meteor.userId()) {
+    browserHistory.replace('/');
+  }
+};
 
 const routes = (
   <Router history={browserHistory}>
-    <Route path="/signup" component={Signup} />
-    <Route path="/" component={Login} />
-    <Route path="/links" component={Link} />
+    <Route path="/signup" component={Signup} onEnter={onEnterPublicPage} />
+    <Route path="/" component={Login} onEnter={onEnterPublicPage} />
+    <Route path="/links" component={Link} onEnter={onEnterPrivatePage} />
     <Route path="*" component={NotFound} />
   </Router>
 );
@@ -31,10 +41,10 @@ Tracker.autorun(() => {
   const isAuthenticatedPage = authenticatedPages.includes(pathname);
 
   if (isUnauthenticatedPage && isAuthenticated) {
-    browserHistory.push('/links');
+    browserHistory.replace('/links');
   }
   else if (isAuthenticatedPage && !isAuthenticated) {
-    browserHistory.push('/');
+    browserHistory.replace('/');
   }
 
 });
